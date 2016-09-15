@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Cliente WS</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+    jQuery(document).ready(function($) {
+
+      var nombre = prompt("Ingrese su nombre", "Harry Potter");
+
+      if (nombre == null) {
+          alert('debe ingresar su nombre');
+
+      } else {
+
+        $('#btnEnviar').on('click', function(event) {
+          var mensaje = nombre + ">> " + $('#mensaje').val();
+          wsClient.send(mensaje);
+          $('#mensaje').val('');
+        });
+        var onMessage = function (event) {
+          
+          $('#contenedor').append($('<p>').html(event.data));
+   
+        }
+
+        var onOpen = function (event) {
+          console.log(event);
+        }
+        
+        var onError = function (event) {
+          console.log(event);
+        }
+      
+        wsClient = new WebSocket('ws://localhost:8025/ws');
+        wsClient.onmessage = onMessage;
+        wsClient.onopen = onOpen;
+        wsClient.onerror = onError;
+      
+
+      }
+
+
+
+    });
+      
+
+    </script>
+    <style type="text/css">
+      #contenedor {
+        
+      }
+
+      #bot {
+        position: absolute;
+        border: 1px solid blue;
+        width: 99%;
+        bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="contenedor">
+    </div>
+    <div id="bot">
+      <input style="width: 90%;" type="text" name="mensaje" id="mensaje" placeholder="Mensaje a enviar...">
+      <button style="" id="btnEnviar">Enviar msg</button>
+    </div>
+
+  </body>
+</html>
